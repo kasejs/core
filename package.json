@@ -1,0 +1,28 @@
+{
+  "name": "@sparklejs/core",
+  "version": "0.1.0",
+  "description": "Super-lightweight Node.JS framework",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc && tsup",
+    "start": "node dist/index.js",
+    "dev": "tsx --watch src/index.ts",
+    "format": "prettier --write \"src/**/*.{ts,js,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js,json}\""
+  },
+  "keywords": [
+    "framework",
+    "microframework"
+  ],
+  "author": "Aleksei Ivanov <contact@aleksei.dev>",
+  "license": "MIT",
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/node": "^22.13.9",
+    "prettier": "^3.5.2",
+    "tsup": "^8.4.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}
