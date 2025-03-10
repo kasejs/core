@@ -1,7 +1,7 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/**/*.ts"], // Keep file structure for dynamic loading
+  entry: ["src/index.ts"],
   outDir: "dist",
   format: ["esm"],
   dts: true, // Generate type declarations

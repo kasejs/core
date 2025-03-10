@@ -1,0 +1,33 @@
+# Source
+src/
+*.ts
+!*.d.ts
+
+# Development
+.github/
+.vscode/
+.editorconfig
+.prettierrc
+jest.config.js
+tsconfig.json
+tsup.config.ts
+vitest.config.ts
+codecov.yml
+
+# Tests
+test/
+coverage/
+*.spec.ts
+*.test.ts
+
+# Git
+.git/
+.gitignore
+
+# Misc
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+*.tgz
+.DS_Store 

@@ -1,9 +1,15 @@
 {
   "name": "@sparklejs/core",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Super-lightweight Node.JS framework",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsc && tsup",
     "build:watch": "tsup --watch",
@@ -13,11 +19,23 @@
     "format:check": "prettier --check \"src/**/*.{ts,js,json}\"",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run test && npm run build",
+    "publish:patch": "node scripts/publish.js patch",
+    "publish:minor": "node scripts/publish.js minor",
+    "publish:major": "node scripts/publish.js major"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sparklejs/core.git"
   },
   "keywords": [
     "framework",
-    "microframework"
+    "microframework",
+    "typescript"
   ],
   "author": "Aleksei Ivanov <contact@aleksei.dev>",
   "license": "MIT",
