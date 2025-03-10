@@ -93,10 +93,6 @@ export class Container {
   ): BindingBuilder<T> {
     return {
       to: (target: Target<T>) => {
-        if (this.container.has(type)) {
-          return;
-        }
-
         if (typeof target === "function") {
           if (target.prototype) {
             this.container.bind({
