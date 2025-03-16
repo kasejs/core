@@ -121,5 +121,17 @@ describe("PinoLogger", () => {
       { err: error, args: ["context"] },
       "Test error",
     );
+
+    logger.fatal(error);
+    expect(mockPinoLogger.fatal).toHaveBeenCalledWith(
+      { err: error },
+      "Test error",
+    );
+
+    logger.fatal(error, "context");
+    expect(mockPinoLogger.fatal).toHaveBeenCalledWith(
+      { err: error, args: ["context"] },
+      "Test error",
+    );
   });
 });
