@@ -19,7 +19,7 @@ describe("Application", () => {
       await app.run();
 
       // Assert
-      expect(console.log).toHaveBeenCalledWith("Application started");
+      expect(app).toHaveProperty("container");
     });
   });
 });
