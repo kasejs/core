@@ -1,2 +1,2 @@
-export { Sparkle } from "./app.js";
+export * from "./app.ts";
 export * from "./container/index.ts";

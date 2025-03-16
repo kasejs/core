@@ -1,13 +1,13 @@
-import { Sparkle } from "../src/index.js";
+import { Application } from "../src/index.js";
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 describe("Application", () => {
-  let sparkle: Sparkle;
+  let app: Application;
 
   beforeEach(() => {
     // Create a fresh instance before each test
-    sparkle = new Sparkle();
+    app = new Application();
 
     // Clear mocks between tests
     vi.clearAllMocks();
@@ -16,7 +16,7 @@ describe("Application", () => {
   describe("run method", () => {
     it("should print 'Application started' to the console", async () => {
       // Act
-      await sparkle.run();
+      await app.run();
 
       // Assert
       expect(console.log).toHaveBeenCalledWith("Application started");
