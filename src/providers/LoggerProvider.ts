@@ -37,6 +37,11 @@ export class LoggerProvider extends Provider {
       new PinoLogger({
         level: this.config.level || "info",
         transport: this.config.transport,
+        formatters: {
+          level(label: string) {
+            return { level: label };
+          },
+        },
       }),
     );
   }
