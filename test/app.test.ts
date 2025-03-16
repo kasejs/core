@@ -14,7 +14,7 @@ describe("Application", () => {
   });
 
   describe("run method", () => {
-    it("should print 'Application started' to the console", async () => {
+    it("should have a dependency injection container", async () => {
       // Act
       await app.run();
 
