@@ -42,13 +42,6 @@ export class LoggerProvider extends Provider {
   }
 
   public async boot(container: Container): Promise<void> {
-    console.log("LoggerProvider boot");
-    const logger = container.get(Logger);
-    logger.trace("hey");
-    logger.debug("hey");
-    logger.info("hey");
-    logger.warn("hey");
-    logger.error("hey");
-    logger.fatal("hey");
+    //
   }
 }
