@@ -1,6 +1,6 @@
 # Sparkle.js
 
-[![Code Coverage](https://codecov.io/gh/sparklejs/core/graph/badge.svg?token=CBFEE0ckBD)](https://codecov.io/gh/sparklejs/core)
+[![Code Coverage](https://codecov.io/gh/kasejs/core/graph/badge.svg?token=CBFEE0ckBD)](https://codecov.io/gh/kasejs/core)
 
 A super-lightweight Node.js framework built on clean architecture principles
 
@@ -11,5 +11,5 @@ A super-lightweight Node.js framework built on clean architecture principles
 ## Installation
 
 ```bash
-npm install @sparklejs/core
+npm install @kasejs/core
 ```
