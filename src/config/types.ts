@@ -28,12 +28,22 @@ type Primitive =
   | null;
 type Builtin = Primitive | Function | Date | Error | RegExp;
 
-// Type for dot notation paths - improved to filter out function properties
+/**
+ * Type for dot notation paths
+ * @param T - The type to convert to a dot notation path
+ * @returns The dot notation path of the type
+ *
+ * @example
+ * ```ts
+ * type Path = PathsToStringProps<{ a: { b: { c: string } } }>;
+ * // Path = "a.b.c"
+ * ```
+ */
 export type PathsToStringProps<T> = T extends Builtin
   ? never
   : T extends any[]
-    ? // For arrays, only allow numeric indices, no methods or length
-      `${number}`
+    ? // Allow only arrays without numeric indices, methods or length
+      never
     : T extends object
       ? {
           // Only include non-function keys
