@@ -1,11 +1,12 @@
 import { Provider } from "../providers/Provider.ts";
 import {
-  CoreConfig,
+  Configuration,
   PathsToStringProps,
   TypeFromPath,
 } from "./types.ts";
 
 export { env } from "./env.ts";
+export type { Configuration } from "./types.ts";
 
 // Merges source object into target, handling nested objects
 function deepMerge<T extends Record<string, any>>(
@@ -41,20 +42,20 @@ function deepMerge<T extends Record<string, any>>(
  * Type-safe config provider with dot notation access
  */
 export class ConfigProvider<T extends Record<string, any>> {
-  constructor(private config: CoreConfig & T) {}
+  constructor(private config: Configuration & T) {}
 
   // Get config value at path with optional default
-  get<P extends PathsToStringProps<CoreConfig & T>>(
+  get<P extends PathsToStringProps<Configuration & T>>(
     path: P,
-    defaultValue?: TypeFromPath<CoreConfig & T, P>,
-  ): TypeFromPath<CoreConfig & T, P> {
+    defaultValue?: TypeFromPath<Configuration & T, P>,
+  ): TypeFromPath<Configuration & T, P> {
     const value = path.split(".").reduce((obj: any, key: string) => {
       return obj && obj[key] !== undefined ? obj[key] : undefined;
     }, this.config as any);
 
     return value !== undefined
       ? value
-      : (defaultValue as TypeFromPath<CoreConfig & T, P>);
+      : (defaultValue as TypeFromPath<Configuration & T, P>);
   }
 }
 
@@ -63,10 +64,10 @@ let configInstance: ConfigProvider<any>;
 
 // Create a type for our config object
 export type Config = {
-  get<P extends PathsToStringProps<CoreConfig>>(
+  get<P extends PathsToStringProps<Configuration>>(
     path: P,
-    defaultValue?: TypeFromPath<CoreConfig, P>,
-  ): TypeFromPath<CoreConfig, P>;
+    defaultValue?: TypeFromPath<Configuration, P>,
+  ): TypeFromPath<Configuration, P>;
 };
 
 // Create a proxy that forwards calls to the config instance
@@ -85,8 +86,8 @@ export const config: Config = new Proxy({} as Config, {
 /**
  * Creates global config from provider defaults and explicit overrides
  */
-export function createConfig<T extends Record<string, any>>(
-  config: Partial<CoreConfig & T>,
+export function configure<T extends Record<string, any>>(
+  config: Partial<Configuration & T>,
 ): ConfigProvider<T> {
   // Get providers
   const providerClasses = (config.providers || []) as Array<
@@ -111,9 +112,9 @@ export function createConfig<T extends Record<string, any>>(
 
   // Merge configs with priority to explicit settings
   const mergedConfig = deepMerge(
-    providerConfigs as CoreConfig & T,
+    providerConfigs as Configuration & T,
     config as Record<string, any>,
-  ) as CoreConfig & T;
+  ) as Configuration & T;
 
   // Create and store config
   configInstance = new ConfigProvider<T>(mergedConfig);

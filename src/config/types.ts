@@ -13,7 +13,7 @@ export type CleanArray<T> = {
 };
 
 // Base config that only includes core functionality
-export interface CoreConfig {
+export interface Configuration {
   providers: (new () => Provider)[];
 }
 

@@ -1,4 +1,4 @@
-import { config, env } from "../config/index.ts";
+import { config, env } from "../config.ts";
 import { Container } from "../container/index.ts";
 import { Logger, PinoLogger } from "../services/logger/index.ts";
 import { Provider } from "./Provider.ts";
@@ -12,7 +12,7 @@ import { pino } from "pino";
  * `config.get("path.to.property")` method.
  */
 declare module "../config/types.ts" {
-  interface CoreConfig {
+  interface Configuration {
     log: {
       level: pino.LevelWithSilent;
       format: "json" | "pretty";

@@ -1,23 +1,25 @@
-import { createConfig } from "./config/index.ts";
+import { configure } from "./config/index.ts";
 import { LoggerProvider } from "./providers/LoggerProvider.ts";
 
-export { config, env } from "./config/index.ts";
+export {
+  env,
+  config,
+  configure,
+  type Configuration,
+} from "./config/index.ts";
 
 /**
- * Here we are initializing the global config
- * with the core providers such as logger.
+ * Global configuration initialization.
  *
- * The `config` object will be available globally and will
- * be automatically suggested by the IDE when using the
+ * The `config` object will be available globally in service providers
+ *  and will have automatic suggestions by the IDE when using the
  * `config.get("path.to.property")` method.
- *
- * This can be redefined in the application that uses
- * this package to extend the core config with more
- * properties.
  */
-createConfig({
+configure({
   providers: [
-    // Core providers
+    /**
+     * Core providers
+     */
     LoggerProvider,
   ],
 });
