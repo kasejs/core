@@ -1,119 +1,74 @@
 import { Provider } from "../providers/Provider.ts";
-import {
-  Configuration,
-  PathsToStringProps,
-  TypeFromPath,
-} from "./types.ts";
+import { Configuration } from "./types.ts";
 
 export { env } from "./env.ts";
 export type { Configuration } from "./types.ts";
 
-// Merges source object into target, handling nested objects
+// Private config data
+let configData: Record<string, any> = {};
+
+// Simple deep merge function
 function deepMerge<T extends Record<string, any>>(
   target: T,
   source: Record<string, any>,
 ): T {
-  const result = { ...target } as T;
+  const result = { ...target } as Record<string, any>;
 
-  Object.keys(source).forEach((key) => {
-    const targetValue = result[key as keyof T];
+  for (const key in source) {
+    const targetValue = result[key];
     const sourceValue = source[key];
 
     if (
+      sourceValue &&
       typeof sourceValue === "object" &&
-      sourceValue !== null &&
       !Array.isArray(sourceValue) &&
-      typeof targetValue === "object" &&
-      targetValue !== null
+      targetValue &&
+      typeof targetValue === "object"
     ) {
-      (result as any)[key] = deepMerge(
-        targetValue as Record<string, any>,
-        sourceValue,
-      );
+      result[key] = deepMerge(targetValue, sourceValue);
     } else if (sourceValue !== undefined) {
-      (result as any)[key] = sourceValue;
+      result[key] = sourceValue;
     }
-  });
-
-  return result;
-}
-
-/**
- * Type-safe config provider with dot notation access
- */
-export class ConfigProvider<T extends Record<string, any>> {
-  constructor(private config: Configuration & T) {}
-
-  // Get config value at path with optional default
-  get<P extends PathsToStringProps<Configuration & T>>(
-    path: P,
-    defaultValue?: TypeFromPath<Configuration & T, P>,
-  ): TypeFromPath<Configuration & T, P> {
-    const value = path.split(".").reduce((obj: any, key: string) => {
-      return obj && obj[key] !== undefined ? obj[key] : undefined;
-    }, this.config as any);
-
-    return value !== undefined
-      ? value
-      : (defaultValue as TypeFromPath<Configuration & T, P>);
   }
 
-  maybe<T>(path: string, defaultValue?: T): T | undefined {
-    const value = path.split(".").reduce((obj: any, key: string) => {
-      return obj && obj[key] !== undefined ? obj[key] : undefined;
-    }, this.config as any);
-
-    return value !== undefined ? value : (defaultValue ?? undefined);
-  }
+  return result as T;
 }
 
-// Global config instance
-let configInstance: ConfigProvider<any>;
-
-// Create a type for our config object
-export type Config = {
-  get<P extends PathsToStringProps<Configuration>>(
-    path: P,
-    defaultValue?: TypeFromPath<Configuration, P>,
-  ): TypeFromPath<Configuration, P>;
-
-  maybe<T>(path: string, defaultValue?: T): T | undefined;
-};
-
-// Create a proxy that forwards calls to the config instance
-export const config: Config = new Proxy({} as Config, {
-  get(target, prop) {
-    if (!configInstance) {
+// Public config object
+const config = {
+  get<T>(path: string, defaultValue?: T): T {
+    if (Object.keys(configData).length === 0) {
       throw new Error(
         "Config not initialized. Call 'configure' first.",
       );
     }
 
-    return configInstance[prop as keyof typeof configInstance];
-  },
-});
+    const value = path.split(".").reduce((obj: any, key: string) => {
+      return obj && obj[key] !== undefined ? obj[key] : undefined;
+    }, configData);
 
-/**
- * Creates global config from provider defaults and explicit overrides
- */
-export function configure<T extends Record<string, any>>(
-  config: Partial<Configuration & T>,
-): ConfigProvider<T> {
-  // Get providers
-  const providerClasses = (config.providers || []) as Array<
+    return value !== undefined ? value : (defaultValue as T);
+  },
+};
+
+// Creates global config from provider defaults and explicit overrides
+function configure<T extends Record<string, any>>(
+  configInput: Partial<Configuration & T>,
+): void {
+  // Get and instantiate providers
+  const providerClasses = (configInput.providers || []) as Array<
     new () => Provider
   >;
 
-  // Instantiate providers
   const providers = providerClasses
     .filter(
-      (ProviderClass): ProviderClass is new () => Provider =>
+      (ProviderClass: any): ProviderClass is new () => Provider =>
         typeof ProviderClass === "function",
     )
-    .map((ProviderClass) => new ProviderClass());
+    .map((ProviderClass: new () => Provider) => new ProviderClass());
 
   // Collect provider configs
-  const providerConfigs = providers.reduce(
+  const providerConfig = providers.reduce(
     (acc: Record<string, any>, provider: Provider) => {
       if (typeof (provider as any).config === "function") {
         return deepMerge(acc, (provider as any).config());
@@ -124,13 +79,8 @@ export function configure<T extends Record<string, any>>(
   );
 
   // Merge configs with priority to explicit settings
-  const mergedConfig = deepMerge(
-    providerConfigs as Configuration & T,
-    config as Record<string, any>,
-  ) as Configuration & T;
-
-  // Create and store config
-  configInstance = new ConfigProvider<T>(mergedConfig);
-
-  return configInstance;
+  configData = deepMerge(providerConfig, configInput);
 }
+
+// Export public API
+export { config, configure };

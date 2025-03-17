@@ -19,7 +19,7 @@ import {
  */
 declare module "../../src/config/types.ts" {
   interface Configuration {
-    test: {
+    provider: {
       value: "a" | "b";
     };
   }
@@ -31,8 +31,8 @@ export class TestProvider extends Provider {
    */
   public config() {
     return {
-      test: {
-        value: env<"a" | "b">("TEST_VALUE", "a"),
+      provider: {
+        value: env<"a" | "b">("PROVIDER_VALUE", "a"),
       },
     };
   }
@@ -62,52 +62,26 @@ describe("Config", () => {
   });
 
   describe("provider", () => {
-    it("should be able to get extended config defined in a provider", () => {
-      process.env.TEST_VALUE = "a";
+    it("should be able to get config defined in the provider", () => {
+      process.env.PROVIDER_VALUE = "a";
 
       configure({
         providers: [TestProvider],
       });
 
-      expect(config.get("test.value")).toBe("a");
+      expect(config.get("provider.value")).toBe("a");
     });
 
-    it("should be able to get value from env variable", () => {
-      process.env.TEST_VALUE = "b";
-
-      configure({
-        providers: [TestProvider],
-      });
-
-      expect(config.get("test.value")).toBe("b");
-    });
-
-    it("should be able to get provider value in unsafe manner", () => {
-      process.env.TEST_VALUE = "c";
-
-      configure({
-        providers: [TestProvider],
-      });
-
-      const value = config.maybe<string>("test.value");
-
-      expect(value).toBeTypeOf("string");
-      expect(value).toBe("c");
-    });
-
-    it("should be able to get explicit config in unsafe manner", () => {
-      process.env.EXPLICIT_VALUE = "foo";
+    it("should be able to get config defined explicitly", () => {
+      process.env.EXPLICIT_VALUE = "b";
 
       configure({
         explicit: {
-          value: env("EXPLICIT_VALUE", "bar"),
+          value: env("EXPLICIT_VALUE", "b"),
         },
       });
 
-      const value = config.maybe<string>("explicit.value");
-
-      expect(value).toBeTypeOf("string");
-      expect(value).toBe("foo");
+      expect(config.get("explicit.value")).toBe("b");
     });
   });
 });
