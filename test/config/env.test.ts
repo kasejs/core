@@ -1,5 +1,4 @@
-import * as config from "../src/config/index.ts";
-import { env } from "../src/env.ts";
+import { env } from "../../src/config/env.ts";
 
 import {
   afterEach,
@@ -25,7 +24,7 @@ describe("Config", () => {
     process.env = originalEnv;
   });
 
-  describe("env utility", () => {
+  describe("environment", () => {
     it("should return the default value when environment variable is not set", () => {
       // Ensure variable doesn't exist
       delete process.env.TEST_VAR;

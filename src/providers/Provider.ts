@@ -1,9 +1,15 @@
-import { Container } from "../container/Container.ts";
+import { CoreConfig } from "../config/types.ts";
+import { Container } from "../container/index.ts";
 
 /**
  * Base class for all service providers
  */
 export abstract class Provider {
+  /**
+   * Get provider's default configuration
+   */
+  public abstract config(): Partial<Record<keyof CoreConfig, any>>;
+
   /**
    * Register services in the container
    */

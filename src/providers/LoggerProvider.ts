@@ -1,42 +1,54 @@
-import { log } from "../config/log.ts";
-import { Container } from "../container/Container.ts";
+import { config, env } from "../config/index.ts";
+import { Container } from "../container/index.ts";
 import { Logger, PinoLogger } from "../services/logger/index.ts";
 import { Provider } from "./Provider.ts";
 
 import { pino } from "pino";
 
 /**
- * Configuration for the logger provider
+ * Here we are extending the core config with new properties
+ * that will be available to the config instance and will be
+ * automatically suggested by the IDE when using the
+ * `config.get("path.to.property")` method.
  */
-export interface LoggerConfig {
-  level?: pino.LevelWithSilent;
-  transport?: pino.TransportSingleOptions;
+declare module "../config/types.ts" {
+  interface CoreConfig {
+    log: {
+      level: pino.LevelWithSilent;
+      format: "json" | "pretty";
+    };
+  }
 }
 
 /**
  * Provider for the logger service
  */
 export class LoggerProvider extends Provider {
-  constructor(private config: LoggerConfig = {}) {
-    super();
-
-    this.config.level = log.level as pino.LevelWithSilent;
-    this.config.transport =
-      log.format === "pretty"
-        ? {
-            target: "pino-pretty",
-          }
-        : undefined;
+  /**
+   * Get default logger configuration
+   */
+  public config() {
+    return {
+      log: {
+        level: env<string>("LOG_LEVEL", "info"),
+        format: env<string>("LOG_FORMAT", "pretty"),
+      },
+    };
   }
 
   /**
    * Register the logger service in the container
    */
-  public register(container: Container): void {
+  public register(container: Container) {
+    const transport =
+      config.get("log.format") === "pretty"
+        ? { target: "pino-pretty" as const }
+        : undefined;
+
     container.bind(Logger).to(
       new PinoLogger({
-        level: this.config.level || "info",
-        transport: this.config.transport,
+        level: config.get("log.level"),
+        transport,
         formatters: {
           level(label: string) {
             return { level: label };
@@ -46,7 +58,10 @@ export class LoggerProvider extends Provider {
     );
   }
 
-  public async boot(container: Container): Promise<void> {
-    //
+  public async boot(container: Container) {
+    // You can put any boot logic that should be executed
+    // after all services have been registered.
+    const logger = container.get(Logger);
+    logger.info("LoggerProvider booted");
   }
 }
