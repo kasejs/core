@@ -41,13 +41,13 @@ export class LoggerProvider extends Provider {
    */
   public register(container: Container) {
     const transport =
-      config.get("log.format") === "pretty"
+      config.get<string>("log.format") === "pretty"
         ? { target: "pino-pretty" as const }
         : undefined;
 
     container.bind(Logger).to(
       new PinoLogger({
-        level: config.get("log.level"),
+        level: config.get<pino.LevelWithSilent>("log.level"),
         transport,
         formatters: {
           level(label: string) {

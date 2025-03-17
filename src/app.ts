@@ -1,4 +1,5 @@
 import { config } from "./config.ts";
+import { Configuration } from "./config/types.ts";
 import { Container } from "./container/Container.js";
 import { Provider } from "./providers/Provider.ts";
 
@@ -24,7 +25,9 @@ export class Application {
    * Register service providers defined in the config.
    */
   private registerProviders(): void {
-    for (const ProviderClass of config.get("providers")) {
+    for (const ProviderClass of config.get<
+      Configuration["providers"]
+    >("providers", [])) {
       const provider = new ProviderClass();
 
       // Register the provider's services with the container
