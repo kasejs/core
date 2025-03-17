@@ -1,6 +1,5 @@
 import { env } from "../../src/config/env.ts";
-import { createConfig } from "../../src/config/index.ts";
-import { Container } from "../../src/container/index.ts";
+import { configure } from "../../src/config/index.ts";
 import { Provider } from "../../src/providers/index.ts";
 
 import {
@@ -19,7 +18,7 @@ import {
  * `config.get("path.to.property")` method.
  */
 declare module "../../src/config/types.ts" {
-  interface CoreConfig {
+  interface Configuration {
     test: {
       value: "a" | "b";
     };
@@ -64,7 +63,7 @@ describe("Config", () => {
 
   describe("provider", () => {
     it("should be able to get extended config defined in a provider", () => {
-      const config = createConfig({
+      const config = configure({
         providers: [TestProvider],
       });
 
@@ -74,7 +73,7 @@ describe("Config", () => {
     it("should be able to get value from env variable", () => {
       process.env.TEST_VALUE = "b";
 
-      const config = createConfig({
+      const config = configure({
         providers: [TestProvider],
       });
 

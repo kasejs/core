@@ -95,9 +95,12 @@ export function configure<T extends Record<string, any>>(
   >;
 
   // Instantiate providers
-  const providers = providerClasses.map(
-    (ProviderClass: new () => Provider) => new ProviderClass(),
-  );
+  const providers = providerClasses
+    .filter(
+      (ProviderClass): ProviderClass is new () => Provider =>
+        typeof ProviderClass === "function",
+    )
+    .map((ProviderClass) => new ProviderClass());
 
   // Collect provider configs
   const providerConfigs = providers.reduce(
