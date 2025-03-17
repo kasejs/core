@@ -1,1 +1,1 @@
-export { Container, inject } from "./Container.ts";
+export { Container, inject } from "./container.ts";

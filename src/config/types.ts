@@ -1,4 +1,4 @@
-import { Provider } from "../providers/Provider.ts";
+import { Provider } from "../providers/provider.ts";
 
 // Base config that only includes core functionality
 export interface Configuration {

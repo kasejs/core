@@ -1,7 +1,7 @@
-import { config } from "./config.ts";
+import { config } from "./config/index.ts";
 import { Configuration } from "./config/types.ts";
-import { Container } from "./container/Container.js";
-import { Provider } from "./providers/Provider.ts";
+import { Container } from "./container/index.ts";
+import { Provider } from "./providers/index.ts";
 
 export class Application {
   /**

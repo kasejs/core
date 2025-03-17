@@ -1,2 +1,2 @@
-export * from "./Provider.ts";
-export * from "./LoggerProvider.ts";
+export * from "./provider.ts";
+export * from "./logger.provider.ts";

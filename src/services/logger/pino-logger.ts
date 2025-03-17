@@ -1,4 +1,4 @@
-import { Logger } from "./Logger.ts";
+import { Logger } from "./logger.ts";
 
 import { pino } from "pino";
 

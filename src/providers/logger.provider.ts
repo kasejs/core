@@ -1,7 +1,7 @@
 import { config, env } from "../config.ts";
 import { Container } from "../container/index.ts";
 import { Logger, PinoLogger } from "../services/logger/index.ts";
-import { Provider } from "./Provider.ts";
+import { Provider } from "./provider.ts";
 
 import { pino } from "pino";
 

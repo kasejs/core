@@ -1,2 +1,2 @@
-export * from "./Logger.ts";
-export * from "./PinoLogger.ts";
+export * from "./logger.ts";
+export * from "./pino-logger.ts";

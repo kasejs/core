@@ -1,5 +1,5 @@
 import { configure } from "./config/index.ts";
-import { LoggerProvider } from "./providers/LoggerProvider.ts";
+import { LoggerProvider } from "./providers/logger.provider.ts";
 
 export {
   env,

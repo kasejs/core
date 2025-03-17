@@ -1,4 +1,4 @@
-import { Provider } from "../providers/Provider.ts";
+import { Provider } from "../providers/provider.ts";
 import { Configuration } from "./types.ts";
 
 export { env } from "./env.ts";
