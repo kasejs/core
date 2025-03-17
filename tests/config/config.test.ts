@@ -82,7 +82,7 @@ describe("Config", () => {
       expect(config.get("test.value")).toBe("b");
     });
 
-    it("should be able to get value in unsafe manner", () => {
+    it("should be able to get provider value in unsafe manner", () => {
       process.env.TEST_VALUE = "c";
 
       configure({
@@ -93,6 +93,21 @@ describe("Config", () => {
 
       expect(value).toBeTypeOf("string");
       expect(value).toBe("c");
+    });
+
+    it("should be able to get explicit config in unsafe manner", () => {
+      process.env.EXPLICIT_VALUE = "foo";
+
+      configure({
+        explicit: {
+          value: env("EXPLICIT_VALUE", "bar"),
+        },
+      });
+
+      const value = config.maybe<string>("explicit.value");
+
+      expect(value).toBeTypeOf("string");
+      expect(value).toBe("foo");
     });
   });
 });
