@@ -57,6 +57,14 @@ export class ConfigProvider<T extends Record<string, any>> {
       ? value
       : (defaultValue as TypeFromPath<Configuration & T, P>);
   }
+
+  maybe<T>(path: string, defaultValue?: T): T | undefined {
+    const value = path.split(".").reduce((obj: any, key: string) => {
+      return obj && obj[key] !== undefined ? obj[key] : undefined;
+    }, this.config as any);
+
+    return value !== undefined ? value : (defaultValue ?? undefined);
+  }
 }
 
 // Global config instance
@@ -68,6 +76,8 @@ export type Config = {
     path: P,
     defaultValue?: TypeFromPath<Configuration, P>,
   ): TypeFromPath<Configuration, P>;
+
+  maybe<T>(path: string, defaultValue?: T): T | undefined;
 };
 
 // Create a proxy that forwards calls to the config instance
@@ -75,7 +85,7 @@ export const config: Config = new Proxy({} as Config, {
   get(target, prop) {
     if (!configInstance) {
       throw new Error(
-        "Config not initialized. Call createConfig first.",
+        "Config not initialized. Call 'configure' first.",
       );
     }
 

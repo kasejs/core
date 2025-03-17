@@ -1,5 +1,5 @@
 import { env } from "../../src/config/env.ts";
-import { configure } from "../../src/config/index.ts";
+import { config, configure } from "../../src/config/index.ts";
 import { Provider } from "../../src/providers/index.ts";
 
 import {
@@ -63,7 +63,9 @@ describe("Config", () => {
 
   describe("provider", () => {
     it("should be able to get extended config defined in a provider", () => {
-      const config = configure({
+      process.env.TEST_VALUE = "a";
+
+      configure({
         providers: [TestProvider],
       });
 
@@ -73,11 +75,24 @@ describe("Config", () => {
     it("should be able to get value from env variable", () => {
       process.env.TEST_VALUE = "b";
 
-      const config = configure({
+      configure({
         providers: [TestProvider],
       });
 
       expect(config.get("test.value")).toBe("b");
+    });
+
+    it("should be able to get value in unsafe manner", () => {
+      process.env.TEST_VALUE = "c";
+
+      configure({
+        providers: [TestProvider],
+      });
+
+      const value = config.maybe<string>("test.value");
+
+      expect(value).toBeTypeOf("string");
+      expect(value).toBe("c");
     });
   });
 });
